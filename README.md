@@ -54,7 +54,7 @@ este caso práctico ha sido implementado en laravel 8.
 
 3. En el archivo de migración recién creado, defina las columnas para la tabla: clients y tabla wallets
 
-'''php
+´´´php
 public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
@@ -66,7 +66,7 @@ public function up()
             $table->timestamps();
         });
     }
-'''
+´´´
 
 '''php
 public function up()
