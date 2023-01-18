@@ -54,7 +54,7 @@ este caso práctico ha sido implementado en laravel 8.
 
 3. En el archivo de migración recién creado, defina las columnas para la tabla: clients y tabla wallets
 
-´´´php
+```php
 public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
@@ -66,9 +66,9 @@ public function up()
             $table->timestamps();
         });
     }
-´´´
+```
 
-'''php
+```php
 public function up()
 {
     Schema::create('wallet', function (Blueprint $table) {
@@ -79,7 +79,7 @@ public function up()
         $table->timestamps();
     });
 }
-'''
+```
 
 4. Cree un nuevo modelo para los clientes usando el comando:
 
@@ -89,7 +89,7 @@ public function up()
 
 5. En el modelo de Cliente, defina los campos rellenables y las regla de validación:
 
-'''php
+```php
 class Client extends Model
 {
     protected $fillable = [
@@ -108,9 +108,9 @@ class Client extends Model
         return $this->hasOne(Wallet::class);
     }
 }
-'''
+```
 
-'''php
+```php
 class Wallet extends Model
 {
     protected $fillable = [
@@ -123,7 +123,7 @@ class Wallet extends Model
         return $this->belongsTo(Client::class);
     }
 }
-'''
+```
 
 6. Cree un nuevo controlador para los clientes usando el comando:
 
