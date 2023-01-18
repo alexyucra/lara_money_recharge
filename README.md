@@ -37,3 +37,98 @@ Una posible solución para este escenario podría ser la creación de una aplica
 - Inicio de sesión seguro y acceso basado en roles para garantizar que solo el personal autorizado pueda acceder a la aplicación. (falta implementar)
 
 La aplicación debe diseñarse para que sea fácil de usar y fácil de usar, con instrucciones claras y mensajes de validación para ayudar a los promotores a ingresar la información correcta. La aplicación también debe estar diseñada para ser segura y confiable para proteger la información y las transacciones de los clientes.
+
+## implementación
+
+este caso práctico ha sido implementado en laravel 8.
+
+1. Cree un nuevo proyecto de Laravel usando el comando 
+
+> compositor create-project --prefer-dist laravel/laravel recargas
+
+2. Cree una nueva migración para la tabla "clientes" para almacenar el PlayerID, el comprobante de depósito y el canal de comunicación utilizado.
+
+> php artisan make:migration create_clients_table
+
+> php artisan make:migration create_wallet_table
+
+3. En el archivo de migración recién creado, defina las columnas para la tabla: clients y tabla wallets
+
+'''php
+public function up()
+    {
+        Schema::create('clients', function (Blueprint $table) {
+            $table->id();
+            $table->string('player_id');
+            $table->string('deposit_voucher');
+            $table->string('bank');
+            $table->string('channel');
+            $table->timestamps();
+        });
+    }
+'''
+
+'''php
+public function up()
+{
+    Schema::create('wallet', function (Blueprint $table) {
+        $table->increments('id');
+        $table->unsignedInteger('client_id');
+        $table->decimal('balance', 8, 2);
+        $table->text('transactions');
+        $table->timestamps();
+    });
+}
+'''
+
+4. Cree un nuevo modelo para los clientes usando el comando:
+
+> php artisan make:model Client
+
+> php artisan make:model Wallet
+
+5. En el modelo de Cliente, defina los campos rellenables y las regla de validación:
+
+'''php
+class Client extends Model
+{
+    protected $fillable = [
+        'player_id', 'deposit_voucher', 'communication_channel'
+    ];
+
+    public static $rules = [
+        'player_id' => 'required|string|max:255',
+        'deposit_voucher' => 'required|numeric',
+        'communication_channel' => 'required|string|in:whatsapp,telegram'
+    ];
+
+    # aqui adicionaremos los relacionamentos con  la clase wallet
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+}
+'''
+
+'''php
+class Wallet extends Model
+{
+    protected $fillable = [
+        'client_id', 'balance', 'transactions'
+    ];
+
+    # aqui adicionaremos los relacionamentos con  la clase client
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+}
+'''
+
+6. Cree un nuevo controlador para los clientes usando el comando:
+
+> php artisan make:controller ClientController --resource
+
+7. En ClientController, defina los métodos para crear, ver y actualizar clientes
+
+8. Cree vistas para crear y ver clientes, e incluya un formulario para ingresar el ID del jugador, el comprobante de depósito y el canal de comunicación. cree vistas para viasualizar e administrar wallet.
